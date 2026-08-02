@@ -73,33 +73,16 @@ export default async function AdminSitesPage() {
             className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
           />
         </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">
-              Latitude (GPS)
-            </label>
-            <input
-              name="latitude"
-              required
-              type="number"
-              step="any"
-              placeholder="12.3671"
-              className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-            />
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">
-              Longitude (GPS)
-            </label>
-            <input
-              name="longitude"
-              required
-              type="number"
-              step="any"
-              placeholder="-1.5146"
-              className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-            />
-          </div>
+        <div className="flex flex-col gap-1">
+          <label className="text-sm font-medium text-zinc-700">
+            Lien Google Maps (facultatif)
+          </label>
+          <input
+            name="mapUrl"
+            type="url"
+            placeholder="https://www.google.com/maps/search/?api=1&query=..."
+            className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
+          />
         </div>
         <div className="sm:col-span-2">
           <button
@@ -117,7 +100,7 @@ export default async function AdminSitesPage() {
             <tr>
               <th className="px-4 py-3">Site</th>
               <th className="px-4 py-3">Ville</th>
-              <th className="px-4 py-3">Coordonnées</th>
+              <th className="px-4 py-3">Localisation</th>
               <th className="px-4 py-3 text-center">Produits</th>
               <th className="px-4 py-3 text-right">Actions</th>
             </tr>
@@ -133,7 +116,18 @@ export default async function AdminSitesPage() {
                 </td>
                 <td className="px-4 py-3 text-zinc-600">{s.city.name}</td>
                 <td className="px-4 py-3 text-xs text-zinc-500">
-                  {s.latitude.toFixed(4)}, {s.longitude.toFixed(4)}
+                  {s.mapUrl ? (
+                    <a
+                      href={s.mapUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="font-semibold text-bf-red hover:underline"
+                    >
+                      Google Maps ↗
+                    </a>
+                  ) : (
+                    "—"
+                  )}
                 </td>
                 <td className="px-4 py-3 text-center">{s._count.listings}</td>
                 <td className="px-4 py-3 text-right">

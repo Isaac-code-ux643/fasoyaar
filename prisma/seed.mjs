@@ -36,18 +36,18 @@ async function main() {
   // ---------- Sites ----------
   const stores = [
     // Ouagadougou
-    { cityId: ouaga.id, name: "FASOYAAR Ouaga 2000", address: "Zone du Bois, Ouaga 2000", latitude: 12.3671, longitude: -1.5146, type: "Supermarché" },
-    { cityId: ouaga.id, name: "FASOYAAR Cissin", address: "Route de Kaya, secteur 24", latitude: 12.381, longitude: -1.495, type: "Supermarché" },
-    { cityId: ouaga.id, name: "FASOYAAR Centre-ville", address: "Av. Kwame N'Krumah", latitude: 12.3647, longitude: -1.5194, type: "Supermarché" },
-    { cityId: ouaga.id, name: "FASOYAAR Pissy", address: "Avenue de Pissy, secteur 4", latitude: 12.3545, longitude: -1.568, type: "Supermarché" },
-    { cityId: ouaga.id, name: "FASOYAAR Gounghin", address: "Quartier Gounghin", latitude: 12.35, longitude: -1.545, type: "Supermarché" },
+    { cityId: ouaga.id, name: "FASOYAAR Ouaga 2000", address: "Zone du Bois, Ouaga 2000", mapUrl: "https://www.google.com/maps/search/?api=1&query=Ouaga+2000+Ouagadougou", type: "Supermarché" },
+    { cityId: ouaga.id, name: "FASOYAAR Cissin", address: "Route de Kaya, secteur 24", mapUrl: "https://www.google.com/maps/search/?api=1&query=Cissin+Ouagadougou", type: "Supermarché" },
+    { cityId: ouaga.id, name: "FASOYAAR Centre-ville", address: "Av. Kwame N'Krumah", mapUrl: "https://www.google.com/maps/search/?api=1&query=Ouagadougou+centre-ville", type: "Supermarché" },
+    { cityId: ouaga.id, name: "FASOYAAR Pissy", address: "Avenue de Pissy, secteur 4", mapUrl: "https://www.google.com/maps/search/?api=1&query=Pissy+Ouagadougou", type: "Supermarché" },
+    { cityId: ouaga.id, name: "FASOYAAR Gounghin", address: "Quartier Gounghin", mapUrl: "https://www.google.com/maps/search/?api=1&query=Gounghin+Ouagadougou", type: "Supermarché" },
     // Bobo-Dioulasso
-    { cityId: bobo.id, name: "FASOYAAR Bobo 1", address: "Av. de la République, Bobo-Dioulasso", latitude: 11.183, longitude: -4.298, type: "Supermarché" },
-    { cityId: bobo.id, name: "FASOYAAR Bobo 2", address: "Zone de Saccoua, Bobo-Dioulasso", latitude: 11.1705, longitude: -4.2942, type: "Supermarché" },
+    { cityId: bobo.id, name: "FASOYAAR Bobo 1", address: "Av. de la République, Bobo-Dioulasso", mapUrl: "https://www.google.com/maps/search/?api=1&query=Centre-ville+Bobo-Dioulasso", type: "Supermarché" },
+    { cityId: bobo.id, name: "FASOYAAR Bobo 2", address: "Zone de Saccoua, Bobo-Dioulasso", mapUrl: "https://www.google.com/maps/search/?api=1&query=Saccoua+Bobo-Dioulasso", type: "Supermarché" },
     // Autres villes
-    { cityId: koudougou.id, name: "FASOYAAR Koudougou", address: "Centre-ville de Koudougou", latitude: 12.253, longitude: -2.362, type: "Supermarché" },
-    { cityId: ouahigouya.id, name: "FASOYAAR Ouahigouya", address: "Centre-ville de Ouahigouya", latitude: 13.583, longitude: -2.421, type: "Supermarché" },
-    { cityId: banfora.id, name: "FASOYAAR Banfora", address: "Centre-ville de Banfora", latitude: 10.633, longitude: -4.759, type: "Supermarché" },
+    { cityId: koudougou.id, name: "FASOYAAR Koudougou", address: "Centre-ville de Koudougou", mapUrl: "https://www.google.com/maps/search/?api=1&query=Koudougou+Burkina+Faso", type: "Supermarché" },
+    { cityId: ouahigouya.id, name: "FASOYAAR Ouahigouya", address: "Centre-ville de Ouahigouya", mapUrl: "https://www.google.com/maps/search/?api=1&query=Ouahigouya+Burkina+Faso", type: "Supermarché" },
+    { cityId: banfora.id, name: "FASOYAAR Banfora", address: "Centre-ville de Banfora", mapUrl: "https://www.google.com/maps/search/?api=1&query=Banfora+Burkina+Faso", type: "Supermarché" },
   ];
 
   for (const s of stores) {

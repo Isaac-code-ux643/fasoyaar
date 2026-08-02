@@ -21,8 +21,7 @@ model Store {
   city      City    @relation(fields: [cityId], references: [id])
   name      String
   address   String
-  latitude  Float
-  longitude Float
+  mapUrl    String?
   type      String  @default("Supermarché")
   listings  Listing[]
 }

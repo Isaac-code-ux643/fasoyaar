@@ -99,12 +99,11 @@ export async function createStore(formData: FormData): Promise<void> {
   const name = text(formData.get("name"));
   const address = text(formData.get("address"));
   const type = text(formData.get("type")) || "Supermarché";
-  const latitude = Number(formData.get("latitude"));
-  const longitude = Number(formData.get("longitude"));
-  if (!cityId || !name || !address || !Number.isFinite(latitude) || !Number.isFinite(longitude)) {
+  const mapUrl = text(formData.get("mapUrl")) || null;
+  if (!cityId || !name || !address) {
     return;
   }
-  await prisma.store.create({ data: { cityId, name, address, type, latitude, longitude } });
+  await prisma.store.create({ data: { cityId, name, address, type, mapUrl } });
   revalidatePath("/");
   revalidatePath("/admin/sites");
   revalidatePath("/carte");

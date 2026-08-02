@@ -3,7 +3,6 @@ import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { getSelectedCitySlug } from "@/lib/city";
 import { categoryEmoji, formatPrice } from "@/lib/format";
-import MapView, { type MapMarker } from "@/components/MapView";
 
 export const dynamic = "force-dynamic";
 
@@ -27,15 +26,6 @@ export default async function ProductPage({
   const listings = [...product.listings].sort(
     (a, b) => a.priceUnit - b.priceUnit
   );
-
-  const markers: MapMarker[] = listings.map((l) => ({
-    id: l.store.id,
-    name: l.store.name,
-    address: l.store.address,
-    latitude: l.store.latitude,
-    longitude: l.store.longitude,
-    price: l.priceUnit,
-  }));
 
   const mapLink = citySlug
     ? `/carte?ville=${citySlug}&produit=${product.id}`
@@ -100,7 +90,7 @@ export default async function ProductPage({
             href={mapLink}
             className="rounded-full bg-zinc-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-bf-green"
           >
-            📍 Voir sur la carte
+            📍 Voir les localisations
           </Link>
         </div>
 
@@ -145,13 +135,6 @@ export default async function ProductPage({
           </table>
         </div>
       </div>
-
-      {markers.length > 0 && (
-        <div className="flex flex-col gap-3">
-          <h2 className="text-xl font-bold">Localisation des sites</h2>
-          <MapView markers={markers} />
-        </div>
-      )}
     </div>
   );
 }

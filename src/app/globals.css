@@ -25,12 +25,3 @@ body {
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
 }
-
-.leaflet-container {
-  font-family: inherit;
-}
-
-.leaflet-popup-content {
-  font-size: 13px;
-  line-height: 1.4;
-}

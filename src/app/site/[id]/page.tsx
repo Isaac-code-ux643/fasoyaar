@@ -2,7 +2,6 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import { categoryEmoji, formatPrice } from "@/lib/format";
-import MapView, { type MapMarker } from "@/components/MapView";
 
 export const dynamic = "force-dynamic";
 
@@ -23,14 +22,6 @@ export default async function StorePage({
     },
   });
   if (!store) notFound();
-
-  const marker: MapMarker = {
-    id: store.id,
-    name: store.name,
-    address: store.address,
-    latitude: store.latitude,
-    longitude: store.longitude,
-  };
 
   return (
     <div className="flex flex-col gap-8">
@@ -54,17 +45,17 @@ export default async function StorePage({
             {store.listings.length > 1 ? "s" : ""}
           </p>
         </div>
-        <a
-          href={`https://www.openstreetmap.org/?mlat=${store.latitude}&mlon=${store.longitude}#map=17/${store.latitude}/${store.longitude}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="rounded-full bg-zinc-900 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-bf-green"
-        >
-          Ouvrir dans OpenStreetMap
-        </a>
+        {store.mapUrl ? (
+          <a
+            href={store.mapUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="rounded-full bg-zinc-900 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-bf-green"
+          >
+            📍 Ouvrir dans Google Maps
+          </a>
+        ) : null}
       </div>
-
-      <MapView markers={[marker]} height="h-[380px]" />
 
       <section>
         <h2 className="mb-3 text-xl font-bold">Produits disponibles</h2>
