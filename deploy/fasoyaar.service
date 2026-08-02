@@ -1,0 +1,18 @@
+[Unit]
+Description=FASOYAAR — Comparateur de prix & localisateur de marchés
+After=network.target
+
+[Service]
+Type=simple
+User=fasoyaar
+Group=fasoyaar
+WorkingDirectory=/opt/fasoyaar
+EnvironmentFile=/opt/fasoyaar/.env
+Environment=NODE_ENV=production
+ExecStart=/usr/bin/node node_modules/next/dist/bin/next start -H 127.0.0.1 -p 3000
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+
+[Install]
+WantedBy=multi-user.target
