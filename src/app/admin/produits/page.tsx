@@ -76,7 +76,7 @@ export default async function AdminProduitsPage() {
           </form>
         </Card>
 
-        <Card className="p-5">
+        <Card className="flex flex-col gap-4 p-5">
           <form action={createCategory} className="flex flex-col gap-3">
             <h2 className="flex items-center gap-2 font-semibold">
               <Tag className="h-4 w-4 text-bf-red" aria-hidden="true" />
@@ -89,29 +89,29 @@ export default async function AdminProduitsPage() {
               <Plus className="h-4 w-4" aria-hidden="true" />
               Ajouter la catégorie
             </Button>
-            <div className="flex flex-wrap gap-2">
-              {categories.map((c) => (
-                <span
-                  key={c.id}
-                  className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-sm"
-                >
-                  <CategoryIcon slug={c.slug} className="h-4 w-4 text-zinc-500" />
-                  {c.name}
-                  <form action={deleteCategory}>
-                    <input type="hidden" name="id" value={c.id} />
-                    <button
-                      type="submit"
-                      title="Supprimer"
-                      aria-label={`Supprimer ${c.name}`}
-                      className="rounded-full p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-bf-red"
-                    >
-                      <X className="h-3.5 w-3.5" aria-hidden="true" />
-                    </button>
-                  </form>
-                </span>
-              ))}
-            </div>
           </form>
+          <div className="flex flex-wrap gap-2">
+            {categories.map((c) => (
+              <span
+                key={c.id}
+                className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-sm"
+              >
+                <CategoryIcon slug={c.slug} className="h-4 w-4 text-zinc-500" />
+                {c.name}
+                <form action={deleteCategory}>
+                  <input type="hidden" name="id" value={c.id} />
+                  <button
+                    type="submit"
+                    title="Supprimer"
+                    aria-label={`Supprimer ${c.name}`}
+                    className="rounded-full p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-bf-red"
+                  >
+                    <X className="h-3.5 w-3.5" aria-hidden="true" />
+                  </button>
+                </form>
+              </span>
+            ))}
+          </div>
         </Card>
       </div>
 
