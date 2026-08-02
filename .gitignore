@@ -39,3 +39,9 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# base de données SQLite (à recréer avec npm run db:push && npm run db:seed)
+*.db
+*.db-journal
+*.db-wal
+*.db-shm
