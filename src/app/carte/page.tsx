@@ -1,8 +1,11 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
+import { MapPin, Store } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import { getSelectedCitySlug } from "@/lib/city";
 import { formatPrice } from "@/lib/format";
+import Card from "@/components/ui/Card";
+import Button from "@/components/ui/Button";
 
 export const dynamic = "force-dynamic";
 
@@ -61,11 +64,8 @@ export default async function MapPage({
 
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {stores.map((s) => (
-          <div
-            key={s.id}
-            className="flex items-start gap-3 rounded-2xl border border-zinc-200 bg-white p-4"
-          >
-            <span className="text-2xl">🏬</span>
+          <Card key={s.id} className="flex items-start gap-3 p-4">
+            <Store className="mt-0.5 h-5 w-5 shrink-0 text-zinc-400" aria-hidden="true" />
             <div className="min-w-0 flex-1">
               <Link
                 href={`/site/${s.id}`}
@@ -80,17 +80,20 @@ export default async function MapPage({
                 </span>
               )}
               {s.mapUrl && (
-                <a
+                <Button
                   href={s.mapUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-2 inline-block text-sm font-semibold text-bf-red hover:underline"
+                  variant="dark"
+                  size="sm"
+                  className="mt-2"
                 >
-                  📍 Ouvrir dans Google Maps
-                </a>
+                  <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                  Ouvrir dans Google Maps
+                </Button>
               )}
             </div>
-          </div>
+          </Card>
         ))}
       </div>
     </div>

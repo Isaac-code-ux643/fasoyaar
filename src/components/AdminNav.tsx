@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Button from "@/components/ui/Button";
 
 const links = [
   { href: "/admin", label: "Tableau de bord" },
@@ -20,17 +20,9 @@ export default function AdminNav() {
         const active =
           l.href === "/admin" ? pathname === "/admin" : pathname.startsWith(l.href);
         return (
-          <Link
-            key={l.href}
-            href={l.href}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              active
-                ? "bg-bf-green text-white"
-                : "bg-zinc-100 text-zinc-700 hover:bg-zinc-200"
-            }`}
-          >
+          <Button key={l.href} href={l.href} variant="ghost" active={active}>
             {l.label}
-          </Link>
+          </Button>
         );
       })}
     </nav>

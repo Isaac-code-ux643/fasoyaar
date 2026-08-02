@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { categoryEmoji, formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
+import CategoryIcon from "@/components/ui/CategoryIcon";
+import Badge from "@/components/ui/Badge";
 
 export default function ProductCard({
   id,
@@ -35,9 +37,7 @@ export default function ProductCard({
             loading="lazy"
           />
         ) : (
-          <span className="drop-shadow-sm transition-transform group-hover:scale-110">
-            {categoryEmoji(categorySlug)}
-          </span>
+          <CategoryIcon slug={categorySlug} className="h-16 w-16 text-zinc-300" />
         )}
       </div>
       <div className="flex flex-1 flex-col gap-1 p-4">
@@ -50,9 +50,9 @@ export default function ProductCard({
           <span className="text-lg font-bold text-zinc-900">
             {formatPrice(minPrice)}
           </span>
-          <span className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs font-medium text-zinc-600">
+          <Badge>
             {storeCount} site{storeCount > 1 ? "s" : ""}
-          </span>
+          </Badge>
         </div>
       </div>
     </Link>

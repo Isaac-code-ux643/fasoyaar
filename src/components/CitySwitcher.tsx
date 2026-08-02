@@ -1,6 +1,7 @@
 "use client";
 
 import { selectCity } from "@/app/actions";
+import { MapPin } from "lucide-react";
 
 export default function CitySwitcher({
   cities,
@@ -11,7 +12,7 @@ export default function CitySwitcher({
 }) {
   return (
     <form action={selectCity} className="flex items-center gap-1">
-      <span className="hidden text-xs text-zinc-500 sm:inline">📍</span>
+      <MapPin className="hidden h-4 w-4 text-zinc-400 sm:block" aria-hidden="true" />
       <select
         name="slug"
         defaultValue={currentSlug ?? ""}

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Globe } from "lucide-react";
 import "./globals.css";
 import Header from "@/components/Header";
+import { Wordmark } from "@/components/ui/Logo";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -40,13 +42,13 @@ export default function RootLayout({
         <footer className="border-t border-zinc-200 bg-white">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row">
             <span>
-              © {new Date().getFullYear()}{" "}
-              <span className="font-semibold text-bf-red">FASO</span>
-              <span className="text-bf-yellow">★</span>
-              <span className="font-semibold text-bf-green">YAAR</span> — Tous
-              prix relevés à titre indicatif.
+              © {new Date().getFullYear()} <Wordmark /> — Tous prix
+              relevés à titre indicatif.
             </span>
-            <span>Comparateur de prix &amp; localisateur de marchés 🇧🇫</span>
+            <span className="flex items-center gap-1.5">
+              <Globe className="h-3.5 w-3.5" aria-hidden="true" />
+              Comparateur de prix &amp; localisateur de marchés
+            </span>
           </div>
         </footer>
       </body>

@@ -1,7 +1,10 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { MapPin } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import { categoryEmoji, formatPrice } from "@/lib/format";
+import { formatPrice } from "@/lib/format";
+import Button from "@/components/ui/Button";
+import CategoryIcon from "@/components/ui/CategoryIcon";
 
 export const dynamic = "force-dynamic";
 
@@ -46,14 +49,15 @@ export default async function StorePage({
           </p>
         </div>
         {store.mapUrl ? (
-          <a
+          <Button
             href={store.mapUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full bg-zinc-900 px-4 py-2 text-center text-sm font-semibold text-white transition-colors hover:bg-bf-green"
+            variant="dark"
           >
-            📍 Ouvrir dans Google Maps
-          </a>
+            <MapPin className="h-4 w-4" aria-hidden="true" />
+            Ouvrir dans Google Maps
+          </Button>
         ) : null}
       </div>
 
@@ -72,8 +76,8 @@ export default async function StorePage({
                     href={`/produit/${l.product.id}`}
                     className="flex items-center gap-4 px-4 py-3 transition-colors hover:bg-zinc-50"
                   >
-                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-xl">
-                      {categoryEmoji(l.product.category.slug)}
+                    <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500">
+                      <CategoryIcon slug={l.product.category.slug} className="h-5 w-5" />
                     </span>
                     <span className="min-w-0 flex-1">
                       <span className="block truncate font-semibold text-zinc-900">

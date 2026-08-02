@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { getSelectedCitySlug } from "@/lib/city";
 import CatalogueControls from "@/components/CatalogueControls";
 import ProductCard from "@/components/ProductCard";
+import Card from "@/components/ui/Card";
 
 export const dynamic = "force-dynamic";
 
@@ -77,9 +78,9 @@ export default async function CataloguePage({
       </Suspense>
 
       {available.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-10 text-center text-zinc-500">
+        <Card className="p-10 text-center text-zinc-500">
           Aucun produit trouvé dans {city.name} pour cette recherche.
-        </div>
+        </Card>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {available.map((p) => {

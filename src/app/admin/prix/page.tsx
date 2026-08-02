@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
+import { Plus } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminNav from "@/components/AdminNav";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import { Field, Input, Select } from "@/components/ui/Field";
+import { Table, THead, TH, TR, TD } from "@/components/ui/Table";
 import { createListing, deleteListing, updateListing } from "@/app/admin/actions";
 
 export const metadata: Metadata = { title: "Prix" };
@@ -20,9 +25,6 @@ export default async function AdminPrixPage() {
     }),
   ]);
 
-  const inputCls =
-    "w-full rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none";
-
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -30,139 +32,126 @@ export default async function AdminPrixPage() {
         <AdminNav />
       </div>
 
-      <form
-        action={createListing}
-        className="grid gap-3 rounded-2xl border border-zinc-200 bg-white p-5 sm:grid-cols-2"
-      >
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-zinc-700">Produit</label>
-          <select name="productId" required className={inputCls}>
-            {products.map((p) => (
-              <option key={p.id} value={p.id}>
-                {p.name} ({p.category.name})
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-zinc-700">Site</label>
-          <select name="storeId" required className={inputCls}>
-            {cities.map((c) => (
-              <optgroup key={c.id} label={c.name}>
-                {c.stores.map((s) => (
-                  <option key={s.id} value={s.id}>
-                    {s.name}
-                  </option>
-                ))}
-              </optgroup>
-            ))}
-          </select>
-        </div>
-        <div className="flex flex-col gap-1">
-          <label className="text-sm font-medium text-zinc-700">Prix unitaire (FCFA)</label>
-          <input name="priceUnit" required type="number" min="1" className={inputCls} />
-        </div>
-        <div className="grid grid-cols-2 gap-3">
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">Prix carton</label>
-            <input name="priceCarton" type="number" min="1" className={inputCls} />
+      <Card className="p-5">
+        <form action={createListing} className="grid gap-3 sm:grid-cols-2">
+          <Field label="Produit">
+            <Select name="productId" required>
+              {products.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name} ({p.category.name})
+                </option>
+              ))}
+            </Select>
+          </Field>
+          <Field label="Site">
+            <Select name="storeId" required>
+              {cities.map((c) => (
+                <optgroup key={c.id} label={c.name}>
+                  {c.stores.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Select>
+          </Field>
+          <Field label="Prix unitaire (FCFA)">
+            <Input name="priceUnit" required type="number" min="1" />
+          </Field>
+          <div className="grid grid-cols-2 gap-3">
+            <Field label="Prix carton">
+              <Input name="priceCarton" type="number" min="1" />
+            </Field>
+            <Field label="Qté / carton">
+              <Input name="unitsPerCarton" type="number" min="1" />
+            </Field>
           </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">Qté / carton</label>
-            <input name="unitsPerCarton" type="number" min="1" className={inputCls} />
+          <div className="sm:col-span-2">
+            <Button type="submit">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              Ajouter / mettre à jour le prix
+            </Button>
           </div>
-        </div>
-        <div className="sm:col-span-2">
-          <button
-            type="submit"
-            className="rounded-xl bg-bf-green px-4 py-2 text-sm font-semibold text-white hover:bg-bf-green-dark"
-          >
-            + Ajouter / mettre à jour le prix
-          </button>
-        </div>
-      </form>
+        </form>
+      </Card>
 
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
-            <tr>
-              <th className="px-4 py-3">Produit</th>
-              <th className="px-4 py-3">Site</th>
-              <th className="px-4 py-3">Unité (F)</th>
-              <th className="px-4 py-3">Carton (F)</th>
-              <th className="px-4 py-3">Qté/carton</th>
-              <th className="px-4 py-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {listings.map((l) => (
-              <tr key={l.id} className="border-b border-zinc-100 align-middle last:border-0">
-                <td className="px-4 py-3">
-                  <span className="font-semibold">{l.product.name}</span>
-                  <span className="block text-xs text-zinc-500">
-                    {l.product.category.name}
-                  </span>
-                </td>
-                <td className="px-4 py-3 text-zinc-600">{l.store.name}</td>
-                <td className="px-4 py-3">
-                  <input
-                    form={`edit-${l.id}`}
-                    name="priceUnit"
-                    type="number"
-                    min="1"
-                    defaultValue={l.priceUnit}
-                    className="w-28 rounded-lg border border-zinc-300 px-2 py-1 text-sm"
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  <input
-                    form={`edit-${l.id}`}
-                    name="priceCarton"
-                    type="number"
-                    min="1"
-                    defaultValue={l.priceCarton ?? ""}
-                    placeholder="—"
-                    className="w-28 rounded-lg border border-zinc-300 px-2 py-1 text-sm"
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  <input
-                    form={`edit-${l.id}`}
-                    name="unitsPerCarton"
-                    type="number"
-                    min="1"
-                    defaultValue={l.unitsPerCarton ?? ""}
-                    placeholder="—"
-                    className="w-20 rounded-lg border border-zinc-300 px-2 py-1 text-sm"
-                  />
-                </td>
-                <td className="px-4 py-3">
-                  <div className="flex justify-end gap-2">
-                    <form id={`edit-${l.id}`} action={updateListing}>
-                      <input type="hidden" name="id" value={l.id} />
-                      <button
-                        type="submit"
-                        className="rounded-lg bg-zinc-900 px-3 py-1 text-xs font-semibold text-white hover:bg-zinc-700"
-                      >
-                        Enregistrer
-                      </button>
-                    </form>
-                    <form action={deleteListing}>
-                      <input type="hidden" name="id" value={l.id} />
-                      <button
-                        type="submit"
-                        className="rounded-lg border border-red-200 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
-                      >
-                        Supprimer
-                      </button>
-                    </form>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <Table>
+        <THead>
+          <tr>
+            <TH>Produit</TH>
+            <TH>Site</TH>
+            <TH>Unité (F)</TH>
+            <TH>Carton (F)</TH>
+            <TH>Qté/carton</TH>
+            <TH className="text-right">Actions</TH>
+          </tr>
+        </THead>
+        <tbody>
+          {listings.map((l) => (
+            <TR key={l.id} className="align-middle">
+              <TD>
+                <span className="font-semibold">{l.product.name}</span>
+                <span className="block text-xs text-zinc-500">
+                  {l.product.category.name}
+                </span>
+              </TD>
+              <TD className="text-zinc-600">{l.store.name}</TD>
+              <TD>
+                <Input
+                  form={`edit-${l.id}`}
+                  name="priceUnit"
+                  type="number"
+                  min="1"
+                  defaultValue={l.priceUnit}
+                  compact
+                  className="w-28"
+                />
+              </TD>
+              <TD>
+                <Input
+                  form={`edit-${l.id}`}
+                  name="priceCarton"
+                  type="number"
+                  min="1"
+                  defaultValue={l.priceCarton ?? ""}
+                  placeholder="—"
+                  compact
+                  className="w-28"
+                />
+              </TD>
+              <TD>
+                <Input
+                  form={`edit-${l.id}`}
+                  name="unitsPerCarton"
+                  type="number"
+                  min="1"
+                  defaultValue={l.unitsPerCarton ?? ""}
+                  placeholder="—"
+                  compact
+                  className="w-20"
+                />
+              </TD>
+              <TD className="text-right">
+                <div className="flex justify-end gap-2">
+                  <form id={`edit-${l.id}`} action={updateListing}>
+                    <input type="hidden" name="id" value={l.id} />
+                    <Button type="submit" variant="dark" size="sm">
+                      Enregistrer
+                    </Button>
+                  </form>
+                  <form action={deleteListing}>
+                    <input type="hidden" name="id" value={l.id} />
+                    <Button type="submit" variant="danger" size="sm">
+                      Supprimer
+                    </Button>
+                  </form>
+                </div>
+              </TD>
+            </TR>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 }

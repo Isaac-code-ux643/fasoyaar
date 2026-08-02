@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Plus, Tag, X } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminNav from "@/components/AdminNav";
-import { categoryEmoji } from "@/lib/format";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
+import CategoryIcon from "@/components/ui/CategoryIcon";
+import { Field, Input, Select } from "@/components/ui/Field";
+import { Table, THead, TH, TR, TD } from "@/components/ui/Table";
 import {
   createCategory,
   createProduct,
@@ -33,158 +38,120 @@ export default async function AdminProduitsPage() {
       </div>
 
       <div className="grid gap-6 lg:grid-cols-2">
-        <form
-          action={createProduct}
-          className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-5"
-        >
-          <h2 className="font-semibold">➕ Ajouter un produit</h2>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-zinc-700">Catégorie</label>
-              <select
-                name="categoryId"
-                required
-                className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-              >
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {categoryEmoji(c.slug)} {c.name}
-                  </option>
-                ))}
-              </select>
+        <Card className="p-5">
+          <form action={createProduct} className="flex flex-col gap-3">
+            <h2 className="flex items-center gap-2 font-semibold">
+              <Plus className="h-4 w-4 text-bf-red" aria-hidden="true" />
+              Ajouter un produit
+            </h2>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Catégorie">
+                <Select name="categoryId" required>
+                  {categories.map((c) => (
+                    <option key={c.id} value={c.id}>
+                      {c.name}
+                    </option>
+                  ))}
+                </Select>
+              </Field>
+              <Field label="Marque">
+                <Input name="brand" placeholder="Ex : Sovita" />
+              </Field>
             </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-zinc-700">Marque</label>
-              <input
-                name="brand"
-                placeholder="Ex : Sovita"
-                className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-              />
+            <Field label="Nom du produit">
+              <Input name="name" required placeholder="Ex : Huile végétale (1L)" />
+            </Field>
+            <div className="grid grid-cols-2 gap-3">
+              <Field label="Unité de vente">
+                <Input name="unitLabel" placeholder="Ex : bouteille de 1 L" />
+              </Field>
+              <Field label="Photo (URL)">
+                <Input name="photoUrl" placeholder="https://… (optionnel)" />
+              </Field>
             </div>
-          </div>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">Nom du produit</label>
-            <input
-              name="name"
-              required
-              placeholder="Ex : Huile végétale (1L)"
-              className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-3">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-zinc-700">Unité de vente</label>
-              <input
-                name="unitLabel"
-                placeholder="Ex : bouteille de 1 L"
-                className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-              />
-            </div>
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-zinc-700">
-                Photo (URL)
-              </label>
-              <input
-                name="photoUrl"
-                placeholder="https://… (optionnel)"
-                className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-              />
-            </div>
-          </div>
-          <button
-            type="submit"
-            className="mt-1 rounded-xl bg-bf-green px-4 py-2 text-sm font-semibold text-white hover:bg-bf-green-dark"
-          >
-            + Ajouter
-          </button>
-        </form>
+            <Button type="submit" className="mt-1 self-start">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              Ajouter
+            </Button>
+          </form>
+        </Card>
 
-        <form
-          action={createCategory}
-          className="flex flex-col gap-3 rounded-2xl border border-zinc-200 bg-white p-5"
-        >
-          <h2 className="font-semibold">🏷️ Ajouter une catégorie</h2>
-          <div className="flex flex-col gap-1">
-            <label className="text-sm font-medium text-zinc-700">
-              Nom de la catégorie
-            </label>
-            <input
-              name="name"
-              required
-              placeholder="Ex : Électroménager"
-              className="rounded-xl border border-zinc-300 px-3 py-2 text-sm focus:border-red-500 focus:outline-none"
-            />
-          </div>
-          <button
-            type="submit"
-            className="rounded-xl bg-zinc-900 px-4 py-2 text-sm font-semibold text-white hover:bg-zinc-700"
-          >
-            + Ajouter la catégorie
-          </button>
-          <div className="flex flex-wrap gap-2">
-            {categories.map((c) => (
-              <span
-                key={c.id}
-                className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-sm"
-              >
-                {categoryEmoji(c.slug)} {c.name}
-                <form action={deleteCategory}>
-                  <input type="hidden" name="id" value={c.id} />
-                  <button
-                    type="submit"
-                    title="Supprimer"
-                    className="font-bold text-zinc-400 hover:text-bf-red"
-                  >
-                    ×
-                  </button>
-                </form>
-              </span>
-            ))}
-          </div>
-        </form>
-      </div>
-
-      <div className="overflow-hidden rounded-2xl border border-zinc-200 bg-white">
-        <table className="w-full text-left text-sm">
-          <thead className="border-b border-zinc-200 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-500">
-            <tr>
-              <th className="px-4 py-3">Produit</th>
-              <th className="px-4 py-3">Catégorie</th>
-              <th className="px-4 py-3">Unité</th>
-              <th className="px-4 py-3 text-center">Prix</th>
-              <th className="px-4 py-3 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map((p) => (
-              <tr key={p.id} className="border-b border-zinc-100 last:border-0">
-                <td className="px-4 py-3">
-                  <Link href={`/produit/${p.id}`} className="font-semibold hover:text-bf-red">
-                    {categoryEmoji(p.category.slug)} {p.name}
-                  </Link>
-                  {p.brand && (
-                    <span className="block text-xs text-zinc-500">{p.brand}</span>
-                  )}
-                </td>
-                <td className="px-4 py-3 text-zinc-600">{p.category.name}</td>
-                <td className="px-4 py-3 text-zinc-500">{p.unitLabel}</td>
-                <td className="px-4 py-3 text-center">{p._count.listings}</td>
-                <td className="px-4 py-3 text-right">
-                  <form action={deleteProduct}>
-                    <input type="hidden" name="id" value={p.id} />
+        <Card className="p-5">
+          <form action={createCategory} className="flex flex-col gap-3">
+            <h2 className="flex items-center gap-2 font-semibold">
+              <Tag className="h-4 w-4 text-bf-red" aria-hidden="true" />
+              Ajouter une catégorie
+            </h2>
+            <Field label="Nom de la catégorie">
+              <Input name="name" required placeholder="Ex : Électroménager" />
+            </Field>
+            <Button type="submit" variant="dark" className="self-start">
+              <Plus className="h-4 w-4" aria-hidden="true" />
+              Ajouter la catégorie
+            </Button>
+            <div className="flex flex-wrap gap-2">
+              {categories.map((c) => (
+                <span
+                  key={c.id}
+                  className="flex items-center gap-1.5 rounded-full bg-zinc-100 px-3 py-1 text-sm"
+                >
+                  <CategoryIcon slug={c.slug} className="h-4 w-4 text-zinc-500" />
+                  {c.name}
+                  <form action={deleteCategory}>
+                    <input type="hidden" name="id" value={c.id} />
                     <button
                       type="submit"
-                      className="rounded-lg border border-red-200 px-3 py-1 text-xs font-semibold text-red-600 hover:bg-red-50"
+                      title="Supprimer"
+                      aria-label={`Supprimer ${c.name}`}
+                      className="rounded-full p-0.5 text-zinc-400 hover:bg-zinc-200 hover:text-bf-red"
                     >
-                      Supprimer
+                      <X className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
                   </form>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+                </span>
+              ))}
+            </div>
+          </form>
+        </Card>
       </div>
+
+      <Table>
+        <THead>
+          <tr>
+            <TH>Produit</TH>
+            <TH>Catégorie</TH>
+            <TH>Unité</TH>
+            <TH className="text-center">Prix</TH>
+            <TH className="text-right">Actions</TH>
+          </tr>
+        </THead>
+        <tbody>
+          {products.map((p) => (
+            <TR key={p.id}>
+              <TD>
+                <Link href={`/produit/${p.id}`} className="flex items-center gap-2 font-semibold hover:text-bf-red">
+                  <CategoryIcon slug={p.category.slug} className="h-4 w-4 text-zinc-400" />
+                  <span>{p.name}</span>
+                </Link>
+                {p.brand && (
+                  <span className="block text-xs text-zinc-500">{p.brand}</span>
+                )}
+              </TD>
+              <TD className="text-zinc-600">{p.category.name}</TD>
+              <TD className="text-zinc-500">{p.unitLabel}</TD>
+              <TD className="text-center">{p._count.listings}</TD>
+              <TD className="text-right">
+                <form action={deleteProduct}>
+                  <input type="hidden" name="id" value={p.id} />
+                  <Button type="submit" variant="danger" size="sm">
+                    Supprimer
+                  </Button>
+                </form>
+              </TD>
+            </TR>
+          ))}
+        </tbody>
+      </Table>
     </div>
   );
 }

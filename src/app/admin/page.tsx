@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Banknote, Landmark, Lightbulb, Package, Store } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminNav from "@/components/AdminNav";
+import Button from "@/components/ui/Button";
+import Card from "@/components/ui/Card";
 import { logout } from "@/app/admin/actions";
 
 export const metadata: Metadata = { title: "Tableau de bord" };
@@ -19,10 +22,10 @@ export default async function AdminDashboardPage() {
   ]);
 
   const stats = [
-    { label: "Villes", value: cities, href: "/admin/villes", emoji: "🏙️" },
-    { label: "Sites", value: stores, href: "/admin/sites", emoji: "🏬" },
-    { label: "Produits", value: products, href: "/admin/produits", emoji: "📦" },
-    { label: "Prix référencés", value: listings, href: "/admin/prix", emoji: "💸" },
+    { label: "Villes", value: cities, href: "/admin/villes", Icon: Landmark },
+    { label: "Sites", value: stores, href: "/admin/sites", Icon: Store },
+    { label: "Produits", value: products, href: "/admin/produits", Icon: Package },
+    { label: "Prix référencés", value: listings, href: "/admin/prix", Icon: Banknote },
   ];
 
   return (
@@ -35,12 +38,9 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
         <form action={logout}>
-          <button
-            type="submit"
-            className="rounded-full border border-zinc-300 bg-white px-4 py-2 text-sm font-semibold text-zinc-700 transition-colors hover:border-bf-green hover:text-bf-red"
-          >
+          <Button type="submit" variant="outline">
             Se déconnecter
-          </button>
+          </Button>
         </form>
       </div>
 
@@ -53,17 +53,21 @@ export default async function AdminDashboardPage() {
             href={s.href}
             className="rounded-2xl border border-zinc-200 bg-white p-5 transition-colors hover:border-bf-green"
           >
-            <span className="text-2xl">{s.emoji}</span>
+            <s.Icon className="h-6 w-6 text-bf-red" aria-hidden="true" />
             <span className="mt-2 block text-3xl font-extrabold">{s.value}</span>
             <span className="text-sm text-zinc-500">{s.label}</span>
           </Link>
         ))}
       </div>
 
-      <div className="rounded-2xl border border-dashed border-zinc-300 bg-white p-6 text-sm text-zinc-600">
-        💡 <strong>Astuce</strong> : le prix carton et le nombre d&apos;unités par carton
-        peuvent être laissés vides — ils seront affichés comme « à compléter » sur le site.
-      </div>
+      <Card className="flex items-start gap-3 border-dashed p-6 text-sm text-zinc-600">
+        <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-bf-yellow" aria-hidden="true" />
+        <p>
+          <strong>Astuce</strong> : le prix carton et le nombre d&apos;unités
+          par carton peuvent être laissés vides — ils seront affichés comme
+          « à compléter » sur le site.
+        </p>
+      </Card>
     </div>
   );
 }

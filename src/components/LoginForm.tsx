@@ -2,17 +2,16 @@
 
 import { useActionState } from "react";
 import { login } from "@/app/admin/actions";
+import Button from "@/components/ui/Button";
+import { Field, Input } from "@/components/ui/Field";
 
 export default function LoginForm() {
   const [state, formAction, isPending] = useActionState(login, null);
 
   return (
     <form action={formAction} className="flex flex-col gap-4">
-      <div className="flex flex-col gap-1.5">
-        <label htmlFor="code" className="text-sm font-medium text-zinc-700">
-          Code admin
-        </label>
-        <input
+      <Field label="Code admin">
+        <Input
           id="code"
           name="code"
           type="password"
@@ -21,21 +20,17 @@ export default function LoginForm() {
           required
           autoFocus
           placeholder="•••••••••"
-          className="rounded-xl border border-zinc-300 bg-white px-4 py-3 text-sm focus:border-red-500 focus:outline-none focus:ring-2 focus:ring-red-200"
+          className="py-3"
         />
-      </div>
+      </Field>
       {state?.error && (
         <p className="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700">
           {state.error}
         </p>
       )}
-      <button
-        type="submit"
-        disabled={isPending}
-        className="rounded-xl bg-bf-green px-4 py-3 text-sm font-semibold text-white transition-colors hover:bg-bf-green-dark disabled:opacity-50"
-      >
+      <Button type="submit" disabled={isPending} className="py-3">
         {isPending ? "Vérification…" : "Se connecter"}
-      </button>
+      </Button>
     </form>
   );
 }

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { Lock } from "lucide-react";
 import { isAdmin } from "@/lib/auth";
 import LoginForm from "@/components/LoginForm";
+import Card from "@/components/ui/Card";
 
 export const metadata: Metadata = { title: "Connexion admin" };
 
@@ -10,16 +12,18 @@ export default async function AdminLoginPage() {
 
   return (
     <div className="mx-auto flex min-h-[60vh] max-w-sm flex-col justify-center">
-      <div className="flex flex-col gap-5 rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
+      <Card className="flex flex-col gap-5 p-6">
         <div>
-          <span className="text-3xl">🔐</span>
-          <h1 className="mt-2 text-xl font-bold">Espace admin FASOYAAR</h1>
+          <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-bf-red/10 text-bf-red">
+            <Lock className="h-6 w-6" aria-hidden="true" />
+          </span>
+          <h1 className="mt-3 text-xl font-bold">Espace admin FASOYAAR</h1>
           <p className="text-sm text-zinc-500">
             Entrez le code admin pour gérer les villes, sites, produits et prix.
           </p>
         </div>
         <LoginForm />
-      </div>
+      </Card>
     </div>
   );
 }
