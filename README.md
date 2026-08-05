@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FASOYAAR
 
-## Getting Started
+Localisateur de sites de vente au Burkina Faso — trouvez le magasin le plus proche de chez vous et ouvrez l'itinéraire directement dans Google Maps.
 
-First, run the development server:
+## Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- **Next.js 16** (App Router, Server Actions, Turbopack)
+- **Prisma + PostgreSQL** (Vercel Postgres / Neon, offres gratuites)
+- **Tailwind CSS 4** — identité visuelle aux couleurs du drapeau burkinabè (voir `DESIGN.md`)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Développement local
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Crée une base PostgreSQL gratuite ([Neon](https://neon.tech) ou **Vercel Postgres**).
+2. Copie `.env.example` en `.env` et renseigne `DATABASE_URL` (connexion pooled), `ADMIN_CODE` et `SESSION_SECRET` :
+   ```bash
+   cp .env.example .env
+   npx prisma db push   # crée les tables (City, Store)
+   npm run db:seed      # villes + sites de vente de démonstration
+   ```
+3. Lance :
+   ```bash
+   npm install
+   npm run dev
+   ```
+   Ouvre http://localhost:3000.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+> `ADMIN_CODE` est le code de connexion à l'espace admin (`/admin`). `SESSION_SECRET` se génère avec `openssl rand -hex 32`.
 
-## Learn More
+## Déploiement gratuit sur Vercel
 
-To learn more about Next.js, take a look at the following resources:
+Le repo est prêt : chaque modification poussée sur GitHub redéploie automatiquement.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+1. **Pousse le code sur GitHub** (déjà fait) puis importe le repo dans [Vercel](https://vercel.com/new) :
+   - Framework : **Next.js** (détecté automatiquement).
+   - Build : `npm run build` (Prisma est généré au `npm install` via `postinstall`).
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+2. **Crée la base de données** :
+   - Dans Vercel : **Storage → Create Database → Postgres** (gratuit, propulsé par Neon), ou crée un projet sur [Neon](https://neon.tech) (plan gratuit).
+   - Vercel Postgres injecte automatiquement `DATABASE_URL` (connexion pooled, adaptée au serverless).
 
-## Deploy on Vercel
+3. **Variables d'environnement** dans **Project → Settings → Environment Variables** :
+   | Variable | Valeur |
+   | --- | --- |
+   | `DATABASE_URL` | URL PostgreSQL **pooled** (fournie par Vercel Postgres / Neon) |
+   | `ADMIN_CODE` | ton code admin (≠ celui du `.env` local) |
+   | `SESSION_SECRET` | `openssl rand -hex 32` |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+4. **Initialise la base une seule fois** (depuis ta machine, avec le `DATABASE_URL` de prod dans `.env`) :
+   ```bash
+   npx prisma db push
+   npm run db:seed
+   ```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+5. **Déploie** : Vercel construit et met en ligne. L'URL est `https://<projet>.vercel.app`.
+
+### Pour modifier ensuite
+
+- Code : `git push` → Vercel redéploie.
+- Schéma de base : change `prisma/schema.prisma`, puis `npx prisma db push` (les données sont conservées).
+
+## Scripts
+
+| Commande | Rôle |
+| --- | --- |
+| `npm run dev` | serveur de développement |
+| `npm run build` | build de production |
+| `npm run lint` | eslint |
+| `npm run db:push` | synchronise le schéma Prisma avec la base |
+| `npm run db:seed` | villes + sites de démonstration |
