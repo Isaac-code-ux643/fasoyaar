@@ -10,16 +10,11 @@ export default async function Header() {
 
   return (
     <header className="sticky top-0 z-50 border-b border-zinc-200 bg-white/95 backdrop-blur">
+      <div className="h-0.5 w-full bg-gradient-to-r from-bf-red via-bf-yellow to-bf-green" />
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3">
         <Logo />
 
         <nav className="flex items-center gap-3 text-sm font-medium sm:gap-5">
-          <Link
-            href={city ? `/ville/${city.slug}` : "/"}
-            className="text-zinc-700 transition-colors hover:text-bf-red"
-          >
-            Sites de vente
-          </Link>
           <Link href="/admin" className="text-zinc-700 transition-colors hover:text-bf-red">
             Admin
           </Link>

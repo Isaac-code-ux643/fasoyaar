@@ -1,101 +1,116 @@
 import Link from "next/link";
-import { ArrowRight, Flag, Store } from "lucide-react";
+import { ArrowRight, Landmark, MapPin, Star } from "lucide-react";
 import { prisma } from "@/lib/prisma";
-import Card from "@/components/ui/Card";
-import Badge from "@/components/ui/Badge";
+import Flag from "@/components/ui/Flag";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
-  const cities = await prisma.city.findMany({
-    orderBy: { name: "asc" },
-    include: { _count: { select: { stores: true } } },
-  });
+  const [cities, siteCount] = await Promise.all([
+    prisma.city.findMany({
+      orderBy: { name: "asc" },
+      select: {
+        slug: true,
+        name: true,
+        _count: { select: { stores: true } },
+      },
+    }),
+    prisma.store.count(),
+  ]);
+
+  const stats = [
+    { value: cities.length, label: "Villes couvertes" },
+    { value: siteCount, label: "Sites de vente recensés" },
+    { value: "100 %", label: "Gratuit et ouvert" },
+  ];
 
   return (
-    <div className="flex flex-col gap-10">
-      <section className="relative flex flex-col items-center gap-4 overflow-hidden rounded-3xl border border-zinc-200 bg-white/70 px-6 py-12 text-center">
-        <div className="absolute inset-x-0 top-0 h-1.5 bg-gradient-to-r from-bf-red via-bf-yellow to-bf-green" />
-        <Badge className="border border-bf-red/20 bg-bf-red/5 px-4 py-1.5 text-sm font-semibold text-bf-red">
-          <Flag className="h-4 w-4" aria-hidden="true" />
-          FASOYAAR, au service du peuple Burkinabè
-        </Badge>
-        <h1 className="max-w-2xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-          Trouvez les sites de vente{" "}
-          <span className="text-bf-green">près de vous</span>,{" "}
-          <span className="text-bf-red">dans votre ville</span>
-        </h1>
-        <p className="max-w-xl text-lg text-zinc-600">
-          La localisation exacte des supermarchés, marchés et boutiques, avec
-          l&apos;itinéraire Google Maps.
-        </p>
-      </section>
-
-      <section>
-        <h2 className="mb-4 text-xl font-bold text-bf-green-dark">
-          Choisissez votre ville
-        </h2>
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {cities.map((city) => (
-            <Link
-              key={city.id}
-              href={`/ville/${city.slug}`}
-              className="group flex w-full flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-5 text-left transition-colors hover:border-bf-green"
-            >
-              <span className="flex items-center justify-between">
-                <span className="text-lg font-bold text-zinc-900 group-hover:text-bf-green-dark">
-                  {city.name}
-                </span>
-                <ArrowRight
-                  className="h-5 w-5 text-bf-red transition-transform group-hover:translate-x-1"
-                  aria-hidden="true"
-                />
-              </span>
-              <span className="flex items-center gap-1.5 text-sm text-zinc-500">
-                <Store className="h-4 w-4 text-zinc-400" aria-hidden="true" />
-                {city._count.stores} site{city._count.stores > 1 ? "s" : ""} de
-                vente
-              </span>
-            </Link>
-          ))}
+    <section className="mx-auto grid w-full max-w-5xl items-center gap-10 py-8 sm:py-12 lg:grid-cols-[1.05fr_0.95fr] lg:gap-14">
+      <div className="order-1 lg:order-2">
+        <div className="overflow-hidden rounded-3xl border border-zinc-200 bg-white/90 shadow-sm backdrop-blur">
+          <div className="h-1.5 w-full bg-gradient-to-r from-bf-red via-bf-yellow to-bf-green" />
+          <div className="p-6 sm:p-7">
+            <p className="flex items-center gap-1.5 text-sm font-semibold text-zinc-700">
+              <MapPin className="h-4 w-4 text-bf-red" aria-hidden="true" />
+              Vous êtes dans quelle ville ?
+            </p>
+            <div className="mt-4 flex flex-col gap-2.5">
+              {cities.map((c) => (
+                <Link
+                  key={c.slug}
+                  href={`/api/ville/${c.slug}`}
+                  className="group flex items-center gap-3 rounded-2xl border border-zinc-200 bg-white p-3.5 transition-colors hover:border-bf-green hover:bg-bf-green/[0.04]"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-zinc-100 text-zinc-500 transition-colors group-hover:bg-bf-green/10 group-hover:text-bf-green">
+                    <Landmark className="h-5 w-5" aria-hidden="true" />
+                  </span>
+                  <span className="min-w-0 flex-1 text-left">
+                    <span className="block truncate font-semibold text-zinc-900">
+                      {c.name}
+                    </span>
+                    <span className="block text-xs text-zinc-500">
+                      {c._count.stores} site{c._count.stores > 1 ? "s" : ""} de
+                      vente
+                    </span>
+                  </span>
+                  <ArrowRight
+                    className="h-4 w-4 shrink-0 text-zinc-300 transition-all group-hover:translate-x-1 group-hover:text-bf-red"
+                    aria-hidden="true"
+                  />
+                </Link>
+              ))}
+            </div>
+            <p className="mt-5 text-center text-xs text-zinc-400">
+              Le lien s&apos;ouvre directement dans Google Maps.
+            </p>
+          </div>
         </div>
-      </section>
+      </div>
 
-      <section className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        {[
-          {
-            step: "1",
-            title: "Choisissez votre ville",
-            text: "Sélectionnez la ville où vous voulez trouver les sites de vente.",
-          },
-          {
-            step: "2",
-            title: "Découvrez les sites",
-            text: "Supermarchés, marchés et boutiques recensés, avec leur adresse.",
-          },
-          {
-            step: "3",
-            title: "Ouvrez Google Maps",
-            text: "L'itinéraire exact jusqu'au site de vente, en un clic.",
-          },
-        ].map((s, i) => (
-          <Card key={s.step} className="p-5">
-            <span
-              className={`mb-2 flex h-8 w-8 items-center justify-center rounded-full text-sm font-bold text-white ${
-                i === 0
-                  ? "bg-bf-red"
-                  : i === 1
-                    ? "bg-bf-yellow text-zinc-900"
-                    : "bg-bf-green"
-              }`}
+      <div className="order-2 flex flex-col items-center gap-6 text-center lg:order-1 lg:items-start lg:text-left">
+        <span className="inline-flex items-center gap-2 rounded-full border border-bf-green/25 bg-bf-green/[0.07] px-3.5 py-1.5 text-xs font-semibold text-bf-green-dark">
+          <Flag className="h-4 w-auto" />
+          Au service du peuple Burkinabè
+        </span>
+
+        <div>
+          <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl">
+            <span className="text-bf-red">FASO</span>
+            <Star
+              className="mx-1.5 inline h-9 w-9 fill-bf-yellow text-bf-yellow sm:h-11 sm:w-11"
+              strokeWidth={1.5}
+              aria-hidden="true"
+            />
+            <span className="text-bf-green">YAAR</span>
+          </h1>
+          <p className="mx-auto mt-5 max-w-md text-lg text-zinc-600 lg:mx-0">
+            Le localisateur des sites de vente au Burkina Faso. Trouvez le
+            magasin le plus proche de chez vous et ouvrez l&apos;itinéraire en
+            un clic.
+          </p>
+        </div>
+
+        <dl className="grid w-full max-w-md grid-cols-3 gap-3 lg:max-w-none">
+          {stats.map((s) => (
+            <div
+              key={s.label}
+              className="rounded-2xl border border-zinc-200 bg-white/70 px-4 py-3 backdrop-blur"
             >
-              {s.step}
-            </span>
-            <h3 className="font-semibold text-zinc-900">{s.title}</h3>
-            <p className="text-sm text-zinc-600">{s.text}</p>
-          </Card>
-        ))}
-      </section>
-    </div>
+              <dt className="text-2xl font-extrabold text-zinc-900">
+                {s.value}
+              </dt>
+              <dd className="mt-0.5 text-xs leading-tight text-zinc-500">
+                {s.label}
+              </dd>
+            </div>
+          ))}
+        </dl>
+
+        <p className="flex items-center gap-1.5 text-sm text-zinc-500">
+          <MapPin className="h-4 w-4 text-bf-red" aria-hidden="true" />
+          Sélectionnez votre ville ci-contre pour commencer.
+        </p>
+      </div>
+    </section>
   );
 }

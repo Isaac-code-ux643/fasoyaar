@@ -9,6 +9,7 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-bf-red: #ef2b2d;
+  --color-bf-red-dark: #c1121f;
   --color-bf-yellow: #fcd116;
   --color-bf-green: #009e49;
   --color-bf-green-dark: #00703a;
@@ -17,11 +18,30 @@
 }
 
 body {
-  background:
-    radial-gradient(1200px 500px at 10% -10%, rgba(239, 43, 45, 0.06), transparent 60%),
-    radial-gradient(1200px 500px at 90% 110%, rgba(0, 158, 73, 0.07), transparent 60%),
-    linear-gradient(180deg, #fff7f7 0%, #fafafa 45%, #f0faf3 100%);
+  background-color: #f7f6f4;
+  background-image:
+    repeating-linear-gradient(
+      -45deg,
+      rgba(239, 43, 45, 0.022) 0,
+      rgba(239, 43, 45, 0.022) 18px,
+      rgba(255, 255, 255, 0) 18px,
+      rgba(255, 255, 255, 0) 36px
+    ),
+    radial-gradient(1100px 520px at 10% -8%, rgba(239, 43, 45, 0.09), transparent 58%),
+    radial-gradient(1100px 520px at 90% 110%, rgba(0, 158, 73, 0.09), transparent 58%),
+    linear-gradient(180deg, #fcf1f0 0%, #fafafa 45%, #eef9f2 100%);
+  background-attachment: fixed;
   color: var(--foreground);
   font-family: var(--font-sans), Arial, Helvetica, sans-serif;
   min-height: 100vh;
+}
+
+::selection {
+  background: var(--color-bf-green);
+  color: #fff;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-bf-green);
+  outline-offset: 2px;
 }

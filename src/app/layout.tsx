@@ -1,8 +1,11 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Globe } from "lucide-react";
+import { MapPin } from "lucide-react";
 import "./globals.css";
 import Header from "@/components/Header";
+import FlagBackdrop from "@/components/ui/FlagBackdrop";
+import Flag from "@/components/ui/Flag";
 import { Wordmark } from "@/components/ui/Logo";
 
 const geistSans = Geist({
@@ -17,7 +20,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "FASOYAAR — Prix & localisation des marchés",
+    default: "FASOYAAR — Localisateur de sites de vente",
     template: "%s | FASOYAAR",
   },
   description:
@@ -36,19 +39,30 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="flex min-h-full flex-col text-zinc-900">
-        <div className="h-2 w-full bg-gradient-to-r from-bf-red via-bf-yellow to-bf-green" />
+        <FlagBackdrop />
         <Header />
         <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-6">{children}</main>
-        <footer className="border-t border-zinc-200 bg-white">
-          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row">
-            <span>
-              © {new Date().getFullYear()} <Wordmark /> — Localisateur de sites
-              de vente.
-            </span>
-            <span className="flex items-center gap-1.5">
-              <Globe className="h-3.5 w-3.5" aria-hidden="true" />
-              Trouvez les sites de vente près de chez vous
-            </span>
+        <footer className="mt-auto border-t border-zinc-200 bg-white/85 backdrop-blur">
+          <div className="h-1 w-full bg-gradient-to-r from-bf-red via-bf-yellow to-bf-green" />
+          <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-6 text-xs text-zinc-500 sm:flex-row sm:items-end">
+            <div className="flex flex-col items-center gap-1 text-center sm:items-start sm:text-left">
+              <span>
+                © {new Date().getFullYear()}{" "}
+                <Wordmark className="whitespace-nowrap" /> — Localisateur de
+                sites de vente.
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Flag className="h-3 w-auto" />
+                Référencement des sites de vente au Burkina Faso.
+              </span>
+            </div>
+            <Link
+              href="/admin"
+              className="inline-flex items-center gap-1.5 font-medium text-zinc-600 transition-colors hover:text-bf-red"
+            >
+              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+              Espace administrateur
+            </Link>
           </div>
         </footer>
       </body>

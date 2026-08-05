@@ -28,7 +28,7 @@ export default function Logo() {
         <span className="text-bf-green">YAAR</span>
       </span>
       <span className="text-[11px] font-medium text-zinc-500">
-        Prix &amp; localisation
+        Localisateur de sites de vente
       </span>
     </Link>
   );

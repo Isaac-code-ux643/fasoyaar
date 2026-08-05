@@ -5,7 +5,7 @@ type Variant = "primary" | "dark" | "outline" | "danger" | "ghost";
 type Size = "sm" | "md" | "pill";
 
 const base =
-  "inline-flex cursor-pointer items-center justify-center gap-1.5 transition-colors disabled:opacity-50";
+  "inline-flex cursor-pointer items-center justify-center gap-1.5 transition-all active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50";
 
 const variants: Record<Variant, string> = {
   primary: "rounded-xl bg-bf-green text-white hover:bg-bf-green-dark",
