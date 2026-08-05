@@ -14,14 +14,11 @@ export default async function Header() {
         <Logo />
 
         <nav className="flex items-center gap-3 text-sm font-medium sm:gap-5">
-          <Link href="/catalogue" className="text-zinc-700 transition-colors hover:text-bf-red">
-            Catalogue
-          </Link>
           <Link
-            href={city ? `/carte?ville=${city.slug}` : "/carte"}
+            href={city ? `/ville/${city.slug}` : "/"}
             className="text-zinc-700 transition-colors hover:text-bf-red"
           >
-            Carte
+            Sites de vente
           </Link>
           <Link href="/admin" className="text-zinc-700 transition-colors hover:text-bf-red">
             Admin

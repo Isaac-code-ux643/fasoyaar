@@ -7,8 +7,6 @@ const links = [
   { href: "/admin", label: "Tableau de bord" },
   { href: "/admin/villes", label: "Villes" },
   { href: "/admin/sites", label: "Sites" },
-  { href: "/admin/produits", label: "Produits" },
-  { href: "/admin/prix", label: "Prix" },
 ];
 
 export default function AdminNav() {

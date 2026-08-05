@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     template: "%s | FASOYAAR",
   },
   description:
-    "Comparez les prix des produits (unitaire et carton) et localisez sur la carte tous les sites où les trouver, dans votre ville.",
+    "Trouvez les supermarchés, marchés et boutiques de votre ville et l'itinéraire Google Maps pour vous y rendre.",
 };
 
 export default function RootLayout({
@@ -42,12 +42,12 @@ export default function RootLayout({
         <footer className="border-t border-zinc-200 bg-white">
           <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-zinc-500 sm:flex-row">
             <span>
-              © {new Date().getFullYear()} <Wordmark /> — Tous prix
-              relevés à titre indicatif.
+              © {new Date().getFullYear()} <Wordmark /> — Localisateur de sites
+              de vente.
             </span>
             <span className="flex items-center gap-1.5">
               <Globe className="h-3.5 w-3.5" aria-hidden="true" />
-              Comparateur de prix &amp; localisateur de marchés
+              Trouvez les sites de vente près de chez vous
             </span>
           </div>
         </footer>

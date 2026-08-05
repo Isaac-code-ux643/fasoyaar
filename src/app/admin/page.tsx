@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Banknote, Landmark, Lightbulb, Package, Store } from "lucide-react";
+import { Landmark, Lightbulb, Store } from "lucide-react";
 import { requireAdmin } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import AdminNav from "@/components/AdminNav";
@@ -14,18 +14,14 @@ export const dynamic = "force-dynamic";
 export default async function AdminDashboardPage() {
   await requireAdmin();
 
-  const [cities, stores, products, listings] = await Promise.all([
+  const [cities, stores] = await Promise.all([
     prisma.city.count(),
     prisma.store.count(),
-    prisma.product.count(),
-    prisma.listing.count(),
   ]);
 
   const stats = [
     { label: "Villes", value: cities, href: "/admin/villes", Icon: Landmark },
-    { label: "Sites", value: stores, href: "/admin/sites", Icon: Store },
-    { label: "Produits", value: products, href: "/admin/produits", Icon: Package },
-    { label: "Prix référencés", value: listings, href: "/admin/prix", Icon: Banknote },
+    { label: "Sites de vente", value: stores, href: "/admin/sites", Icon: Store },
   ];
 
   return (
@@ -34,7 +30,7 @@ export default async function AdminDashboardPage() {
         <div>
           <h1 className="text-2xl font-extrabold">Tableau de bord</h1>
           <p className="text-sm text-zinc-500">
-            Gérez le contenu du comparateur de prix.
+            Gérez les villes et les sites de vente.
           </p>
         </div>
         <form action={logout}>
@@ -63,9 +59,9 @@ export default async function AdminDashboardPage() {
       <Card className="flex items-start gap-3 border-dashed p-6 text-sm text-zinc-600">
         <Lightbulb className="mt-0.5 h-5 w-5 shrink-0 text-bf-yellow" aria-hidden="true" />
         <p>
-          <strong>Astuce</strong> : le prix carton et le nombre d&apos;unités
-          par carton peuvent être laissés vides — ils seront affichés comme
-          « à compléter » sur le site.
+          <strong>Astuce</strong> : ajoutez le lien Google Maps de chaque site
+          (bouton « Obtenir l&apos;itinéraire » dans Google Maps) pour que les
+          visiteurs puissent s&apos;y rendre directement.
         </p>
       </Card>
     </div>

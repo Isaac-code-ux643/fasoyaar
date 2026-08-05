@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Flag } from "lucide-react";
+import { ArrowRight, Flag, Store } from "lucide-react";
 import { prisma } from "@/lib/prisma";
 import Card from "@/components/ui/Card";
 import Badge from "@/components/ui/Badge";
@@ -12,18 +12,6 @@ export default async function HomePage() {
     include: { _count: { select: { stores: true } } },
   });
 
-  const stats = await Promise.all(
-    cities.map(async (c) => {
-      const products = await prisma.listing.findMany({
-        where: { store: { cityId: c.id } },
-        select: { productId: true },
-        distinct: ["productId"],
-      });
-      return { cityId: c.id, products: products.length };
-    })
-  );
-  const statMap = new Map(stats.map((s) => [s.cityId, s.products]));
-
   return (
     <div className="flex flex-col gap-10">
       <section className="relative flex flex-col items-center gap-4 overflow-hidden rounded-3xl border border-zinc-200 bg-white/70 px-6 py-12 text-center">
@@ -33,13 +21,13 @@ export default async function HomePage() {
           FASOYAAR, au service du peuple Burkinabè
         </Badge>
         <h1 className="max-w-2xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
-          Trouvez le produit et le prix{" "}
-          <span className="text-bf-green">juste</span> dans{" "}
-          <span className="text-bf-red">votre ville</span>
+          Trouvez les sites de vente{" "}
+          <span className="text-bf-green">près de vous</span>,{" "}
+          <span className="text-bf-red">dans votre ville</span>
         </h1>
         <p className="max-w-xl text-lg text-zinc-600">
-          Prix unitaire, prix carton, et la localisation exacte de tous les
-          sites où le produit est disponible.
+          La localisation exacte des supermarchés, marchés et boutiques, avec
+          l&apos;itinéraire Google Maps.
         </p>
       </section>
 
@@ -51,7 +39,7 @@ export default async function HomePage() {
           {cities.map((city) => (
             <Link
               key={city.id}
-              href={`/api/ville/${city.slug}`}
+              href={`/ville/${city.slug}`}
               className="group flex w-full flex-col gap-2 rounded-2xl border border-zinc-200 bg-white p-5 text-left transition-colors hover:border-bf-green"
             >
               <span className="flex items-center justify-between">
@@ -63,10 +51,10 @@ export default async function HomePage() {
                   aria-hidden="true"
                 />
               </span>
-              <span className="text-sm text-zinc-500">
-                {city._count.stores} site{city._count.stores > 1 ? "s" : ""} ·{" "}
-                {statMap.get(city.id) ?? 0} produit
-                {(statMap.get(city.id) ?? 0) > 1 ? "s" : ""}
+              <span className="flex items-center gap-1.5 text-sm text-zinc-500">
+                <Store className="h-4 w-4 text-zinc-400" aria-hidden="true" />
+                {city._count.stores} site{city._count.stores > 1 ? "s" : ""} de
+                vente
               </span>
             </Link>
           ))}
@@ -78,17 +66,17 @@ export default async function HomePage() {
           {
             step: "1",
             title: "Choisissez votre ville",
-            text: "Sélectionnez la ville où vous voulez comparer les prix.",
+            text: "Sélectionnez la ville où vous voulez trouver les sites de vente.",
           },
           {
             step: "2",
-            title: "Trouvez votre produit",
-            text: "Prix unitaire et prix carton, photo et unité, par produit.",
+            title: "Découvrez les sites",
+            text: "Supermarchés, marchés et boutiques recensés, avec leur adresse.",
           },
           {
             step: "3",
-            title: "Localisez les sites",
-            text: "La carte vous montre l'emplacement exact de tous les sites où il est disponible.",
+            title: "Ouvrez Google Maps",
+            text: "L'itinéraire exact jusqu'au site de vente, en un clic.",
           },
         ].map((s, i) => (
           <Card key={s.step} className="p-5">

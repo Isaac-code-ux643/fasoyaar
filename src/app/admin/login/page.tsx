@@ -19,7 +19,7 @@ export default async function AdminLoginPage() {
           </span>
           <h1 className="mt-3 text-xl font-bold">Espace admin FASOYAAR</h1>
           <p className="text-sm text-zinc-500">
-            Entrez le code admin pour gérer les villes, sites, produits et prix.
+            Entrez le code admin pour gérer les villes et les sites de vente.
           </p>
         </div>
         <LoginForm />

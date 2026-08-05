@@ -8,7 +8,7 @@ export async function GET(
   const { slug } = await params;
   if (!slug) return NextResponse.redirect(new URL("/", req.url));
 
-  const res = NextResponse.redirect(new URL("/catalogue", req.url));
+  const res = NextResponse.redirect(new URL(`/ville/${slug}`, req.url));
   res.cookies.set(CITY_COOKIE, slug, {
     path: "/",
     sameSite: "lax",

@@ -8,53 +8,19 @@ datasource db {
 }
 
 model City {
-  id     Int     @id @default(autoincrement())
-  name   String
-  country String @default("Burkina Faso")
-  slug   String  @unique
-  stores Store[]
+  id      Int     @id @default(autoincrement())
+  name    String
+  country String  @default("Burkina Faso")
+  slug    String  @unique
+  stores  Store[]
 }
 
 model Store {
-  id        Int     @id @default(autoincrement())
-  cityId    Int
-  city      City    @relation(fields: [cityId], references: [id])
-  name      String
-  address   String
-  mapUrl    String?
-  type      String  @default("Supermarché")
-  listings  Listing[]
-}
-
-model Category {
-  id       Int       @id @default(autoincrement())
-  name     String
-  slug     String    @unique
-  products Product[]
-}
-
-model Product {
-  id          Int       @id @default(autoincrement())
-  categoryId  Int
-  category    Category  @relation(fields: [categoryId], references: [id])
-  name        String
-  brand       String?
-  description String?
-  photoUrl    String?
-  unitLabel   String    @default("unité")
-  listings    Listing[]
-}
-
-model Listing {
-  id            Int      @id @default(autoincrement())
-  productId     Int
-  product       Product  @relation(fields: [productId], references: [id])
-  storeId       Int
-  store         Store    @relation(fields: [storeId], references: [id])
-  priceUnit     Int
-  priceCarton   Int?
-  unitsPerCarton Int?
-  updatedAt     DateTime @updatedAt
-
-  @@unique([productId, storeId])
+  id      Int     @id @default(autoincrement())
+  cityId  Int
+  city    City    @relation(fields: [cityId], references: [id])
+  name    String
+  address String
+  mapUrl  String?
+  type    String  @default("Supermarché")
 }

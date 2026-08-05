@@ -82,8 +82,6 @@ export async function deleteCity(formData: FormData): Promise<void> {
   if (!(await isAdmin())) redirect("/admin/login");
   const id = parseNumber(formData.get("id"));
   if (!id) return;
-  const stores = await prisma.store.findMany({ where: { cityId: id }, select: { id: true } });
-  await prisma.listing.deleteMany({ where: { storeId: { in: stores.map((s) => s.id) } } });
   await prisma.store.deleteMany({ where: { cityId: id } });
   await prisma.city.delete({ where: { id } });
   revalidatePath("/");
@@ -106,113 +104,20 @@ export async function createStore(formData: FormData): Promise<void> {
   await prisma.store.create({ data: { cityId, name, address, type, mapUrl } });
   revalidatePath("/");
   revalidatePath("/admin/sites");
-  revalidatePath("/carte");
+  const city = await prisma.city.findUnique({ where: { id: cityId } });
+  if (city) revalidatePath(`/ville/${city.slug}`);
 }
 
 export async function deleteStore(formData: FormData): Promise<void> {
   if (!(await isAdmin())) redirect("/admin/login");
   const id = parseNumber(formData.get("id"));
   if (!id) return;
-  await prisma.listing.deleteMany({ where: { storeId: id } });
+  const store = await prisma.store.findUnique({ where: { id }, select: { cityId: true } });
   await prisma.store.delete({ where: { id } });
   revalidatePath("/");
   revalidatePath("/admin/sites");
-  revalidatePath("/carte");
-}
-
-// ---------------------------------------------------------------
-// Catégories
-// ---------------------------------------------------------------
-export async function createCategory(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const name = text(formData.get("name"));
-  if (!name) return;
-  const slug = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  if (!slug) return;
-  await prisma.category.create({ data: { name, slug } });
-  revalidatePath("/admin/produits");
-}
-
-export async function deleteCategory(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const id = parseNumber(formData.get("id"));
-  if (!id) return;
-  await prisma.category.delete({ where: { id } });
-  revalidatePath("/admin/produits");
-}
-
-// ---------------------------------------------------------------
-// Produits
-// ---------------------------------------------------------------
-export async function createProduct(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const categoryId = parseNumber(formData.get("categoryId"));
-  const name = text(formData.get("name"));
-  const brand = text(formData.get("brand")) || null;
-  const unitLabel = text(formData.get("unitLabel")) || "unité";
-  const photoUrl = text(formData.get("photoUrl")) || null;
-  if (!categoryId || !name) return;
-  await prisma.product.create({ data: { categoryId, name, brand, unitLabel, photoUrl } });
-  revalidatePath("/");
-  revalidatePath("/catalogue");
-  revalidatePath("/admin/produits");
-}
-
-export async function deleteProduct(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const id = parseNumber(formData.get("id"));
-  if (!id) return;
-  await prisma.listing.deleteMany({ where: { productId: id } });
-  await prisma.product.delete({ where: { id } });
-  revalidatePath("/");
-  revalidatePath("/catalogue");
-  revalidatePath("/admin/produits");
-}
-
-// ---------------------------------------------------------------
-// Prix (listings)
-// ---------------------------------------------------------------
-export async function createListing(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const productId = parseNumber(formData.get("productId"));
-  const storeId = parseNumber(formData.get("storeId"));
-  const priceUnit = parseNumber(formData.get("priceUnit"));
-  if (!productId || !storeId || !priceUnit) return;
-  const priceCarton = parseNumber(formData.get("priceCarton"));
-  const unitsPerCarton = parseNumber(formData.get("unitsPerCarton"));
-  await prisma.listing.upsert({
-    where: { productId_storeId: { productId, storeId } },
-    update: { priceUnit, priceCarton, unitsPerCarton },
-    create: { productId, storeId, priceUnit, priceCarton, unitsPerCarton },
-  });
-  revalidatePath("/catalogue");
-  revalidatePath("/produit");
-  revalidatePath("/admin/prix");
-}
-
-export async function updateListing(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const id = parseNumber(formData.get("id"));
-  if (!id) return;
-  const priceUnit = parseNumber(formData.get("priceUnit"));
-  if (!priceUnit) return;
-  const priceCarton = parseNumber(formData.get("priceCarton"));
-  const unitsPerCarton = parseNumber(formData.get("unitsPerCarton"));
-  await prisma.listing.update({
-    where: { id },
-    data: { priceUnit, priceCarton, unitsPerCarton },
-  });
-  revalidatePath("/catalogue");
-  revalidatePath("/produit");
-  revalidatePath("/admin/prix");
-}
-
-export async function deleteListing(formData: FormData): Promise<void> {
-  if (!(await isAdmin())) redirect("/admin/login");
-  const id = parseNumber(formData.get("id"));
-  if (!id) return;
-  await prisma.listing.delete({ where: { id } });
-  revalidatePath("/catalogue");
-  revalidatePath("/produit");
-  revalidatePath("/admin/prix");
+  if (store) {
+    const city = await prisma.city.findUnique({ where: { id: store.cityId } });
+    if (city) revalidatePath(`/ville/${city.slug}`);
+  }
 }

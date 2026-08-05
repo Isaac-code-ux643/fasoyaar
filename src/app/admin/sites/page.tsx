@@ -20,7 +20,7 @@ export default async function AdminSitesPage() {
     prisma.city.findMany({ orderBy: { name: "asc" } }),
     prisma.store.findMany({
       orderBy: [{ cityId: "asc" }, { name: "asc" }],
-      include: { city: true, _count: { select: { listings: true } } },
+      include: { city: true },
     }),
   ]);
 
@@ -77,7 +77,7 @@ export default async function AdminSitesPage() {
             <TH>Site</TH>
             <TH>Ville</TH>
             <TH>Localisation</TH>
-            <TH className="text-center">Produits</TH>
+            <TH>Type</TH>
             <TH className="text-right">Actions</TH>
           </tr>
         </THead>
@@ -106,7 +106,7 @@ export default async function AdminSitesPage() {
                   <span className="text-zinc-400">—</span>
                 )}
               </TD>
-              <TD className="text-center">{s._count.listings}</TD>
+              <TD className="text-zinc-500">{s.type}</TD>
               <TD className="text-right">
                 <form action={deleteStore}>
                   <input type="hidden" name="id" value={s.id} />
