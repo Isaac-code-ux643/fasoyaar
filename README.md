@@ -11,7 +11,7 @@ Localisateur de sites de vente au Burkina Faso — trouvez le magasin le plus pr
 ## Développement local
 
 1. Crée une base PostgreSQL gratuite ([Neon](https://neon.tech) ou **Vercel Postgres**).
-2. Copie `.env.example` en `.env` et renseigne `DATABASE_URL` (connexion pooled), `ADMIN_CODE` et `SESSION_SECRET` :
+2. Copie `.env.example` en `.env` et renseigne `DATABASE_URL_POOLED` (connexion pooled), `ADMIN_CODE` et `SESSION_SECRET` :
    ```bash
    cp .env.example .env
    npx prisma db push   # crée les tables (City, Store)
@@ -35,17 +35,16 @@ Le repo est prêt : chaque modification poussée sur GitHub redéploie automatiq
    - Build : `npm run build` (Prisma est généré au `npm install` via `postinstall`).
 
 2. **Crée la base de données** :
-   - Dans Vercel : **Storage → Create Database → Postgres** (gratuit, propulsé par Neon), ou crée un projet sur [Neon](https://neon.tech) (plan gratuit).
-   - Vercel Postgres injecte automatiquement `DATABASE_URL` (connexion pooled, adaptée au serverless).
+   - Dans Vercel : **Storage → Create Database → Neon** (gratuit). Vercel injecte automatiquement `DATABASE_URL_POOLED` (connexion pooled, adaptée au serverless).
 
 3. **Variables d'environnement** dans **Project → Settings → Environment Variables** :
    | Variable | Valeur |
    | --- | --- |
-   | `DATABASE_URL` | URL PostgreSQL **pooled** (fournie par Vercel Postgres / Neon) |
+   | `DATABASE_URL_POOLED` | URL PostgreSQL **pooled** (créée automatiquement par l'intégration Neon) |
    | `ADMIN_CODE` | ton code admin (≠ celui du `.env` local) |
    | `SESSION_SECRET` | `openssl rand -hex 32` |
 
-4. **Initialise la base une seule fois** (depuis ta machine, avec le `DATABASE_URL` de prod dans `.env`) :
+4. **Initialise la base une seule fois** (depuis ta machine, avec le `DATABASE_URL_POOLED` de prod dans `.env`) :
    ```bash
    npx prisma db push
    npm run db:seed
