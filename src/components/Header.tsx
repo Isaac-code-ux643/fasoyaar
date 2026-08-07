@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { prisma } from "@/lib/prisma";
 import { getSelectedCity } from "@/lib/city";
 import CitySwitcher from "@/components/CitySwitcher";
@@ -15,9 +14,6 @@ export default async function Header() {
         <Logo />
 
         <nav className="flex items-center gap-3 text-sm font-medium sm:gap-5">
-          <Link href="/admin" className="text-zinc-700 transition-colors hover:text-bf-red">
-            Admin
-          </Link>
           <CitySwitcher cities={cities} currentSlug={city?.slug ?? null} />
         </nav>
       </div>

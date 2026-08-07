@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { Geist, Geist_Mono } from "next/font/google";
-import { MapPin } from "lucide-react";
 import "./globals.css";
 import Header from "@/components/Header";
 import FlagBackdrop from "@/components/ui/FlagBackdrop";
@@ -56,13 +54,6 @@ export default function RootLayout({
                 Référencement des sites de vente au Burkina Faso.
               </span>
             </div>
-            <Link
-              href="/admin"
-              className="inline-flex items-center gap-1.5 font-medium text-zinc-600 transition-colors hover:text-bf-red"
-            >
-              <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
-              Espace administrateur
-            </Link>
           </div>
         </footer>
       </body>
